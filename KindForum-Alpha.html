@@ -1,0 +1,187 @@
+<html>
+<!--
+  本文件内容纯属恶搞乐子使用，无任何不良导向。
+  版权所有©Ceteaonia 2015-2023 KindForum Alpha By ChiyokoYukari
+  遵守CC BY-NC-SA 4.0 国际许可协议
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>茶馆青年论坛 | 自由的新时代论坛</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        #container {
+            max-width: 800px; /* 调整总宽度 */
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input[type="text"],
+        textarea {
+            width: calc(100% - 80px); /* 输入框宽度 */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        #submitBtn {
+            padding: 10px 20px;
+            border: none;
+            background-color: #db7093;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            vertical-align: bottom;
+            margin-left: 10px;
+        }
+        #submitBtn:hover {
+            background-color: #ff6eb4;
+        }
+        .post-container {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .post {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            text-align: left;
+            color: #333;
+        }
+        .post p {
+            margin: 0;
+            font-size: 16px;
+        }
+        .post-info {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        #loginBtn { /* 登录按钮 */
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 style="color: #333;">茶馆青年论坛</h1>
+        <input type="text" id="authorInput" placeholder="请输入您的用户名">
+        <textarea id="textInput" rows="4" placeholder="请自由发言，畅所欲言。"></textarea>
+        <button id="loginBtn" onclick="showLogin()">登录</button>
+        <button id="submitBtn" onclick="replaceText()">发布</button>
+        <div class="post-container" id="postContainer"></div>
+    </div>
+
+    <script>
+        var sensitiveWords = {
+            '杀': '口',
+            '死': '口',
+            '逼': '宝',
+            '傻': '笨',
+            '国':'G' ,
+            '鸡吧':'口口' ,
+            '几把':'口口' ,
+            '寄吧':'口口' ,
+            '穴':'口' ,
+            '批':'口' ,
+            '草':'口',
+            '死':'离逝' ,
+            '凶':'嫌疑' ,
+            '尸':'遗体' ,
+            '性':'口' ,
+            '畜生':'小可爱' ,
+            '操':'小青草' ,
+            '弱智':'伶俐' ,
+            '恶俗':'善良' ,
+            '脑瘫':'神经疾病' ,
+            '他妈':'他的母亲',
+            '你妈':'您的母亲',
+            '日':'太阳',
+            'tm':'*授权商标*',
+            '屏蔽':'优化',
+            'nmsl':'阿姨安康',
+            'sb':'笨宝',
+            'nt':'口口',
+            'jb':'口口',
+            '屎':'大号',
+            '尿':'小号',
+            '放屁':'排气',
+            '屁眼':'口口',
+            '屁':'气',
+            
+            // 添加更多敏感词和对应的替换词
+        };
+
+        function replaceText() {
+            var authorName = document.getElementById('authorInput').value || '匿名用户';
+            var inputText = document.getElementById('textInput').value;
+            if (inputText.trim() === "") {
+                alert("您不可发布空白贴文");
+                return;
+            }
+            if (authorName.trim() === 'ChiyokoYukari') {
+                displayPost(authorName, inputText);
+            } else {
+                var replacedText = inputText;
+                for (var word in sensitiveWords) {
+                    if (sensitiveWords.hasOwnProperty(word)) {
+                        replacedText = replacedText.replace(new RegExp(word, "g"), sensitiveWords[word]);
+                    }
+                }
+                displayPost(authorName, replacedText);
+            }
+            document.getElementById('textInput').value = "";
+        }
+
+        function displayPost(author, text) {
+            var postContainer = document.getElementById('postContainer');
+            var post = document.createElement('div');
+            post.className = 'post';
+            var postInfo = document.createElement('div');
+            postInfo.className = 'post-info';
+            postInfo.innerText = getCurrentTime() + " by " + author;
+            var postContent = document.createElement('p');
+            postContent.innerText = text;
+            post.appendChild(postInfo);
+            post.appendChild(postContent);
+            postContainer.insertBefore(post, postContainer.firstChild);
+        }
+
+        function getCurrentTime() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            return year + "-" + formatNumber(month) + "-" + formatNumber(day) + " " + formatNumber(hour) + ":" + formatNumber(minute) + ":" + formatNumber(second);
+        }
+
+        function formatNumber(number) {
+            return number < 10 ? '0' + number : number;
+        }
+        function showLogin() {
+            alert("登录成功！");
+        }
+    </script>
+</body>
+</html>
